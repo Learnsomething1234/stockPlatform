@@ -61,6 +61,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
       holdings.stocks.push({
         symbol,
         currentPrice,
+        BuyPrice:currentPrice,
         qty:quantity,
         total: totalCost,
       });

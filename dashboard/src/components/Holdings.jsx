@@ -113,7 +113,7 @@ const Holdings = () => {
               <th>Symbol</th>
               <th>Quantity</th>
               <th>Buy Price</th>
-              <th>Today Price</th>
+              <th>CurrentPrice</th>
               <th>Total Value</th>
               <th>Actions</th>
             </tr>
