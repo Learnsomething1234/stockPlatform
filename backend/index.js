@@ -20,23 +20,23 @@ app.use("",fetchProduct);
 app.use("",buyProduct)
 app.use("",balance);
 
-// app.listen(PORT, async() => {
-//     console.log("app is started",PORT);
-//     try{
-//     await mongoose.connect(URL);
-//     console.log("mongodb connected");
-//     }catch(e){
-//       console.log(e.message);
-//     }
-    
-// })
-mongoose.connect(URL).then(()=>{
+app.listen(PORT, async() => {
+    console.log("app is started",PORT);
+    try{
+    await mongoose.connect(URL);
     console.log("mongodb connected");
-}).catch((e)=>{
-  console.log(e.message);
+    }catch(e){
+      console.log(e.message);
+    }
+    
 })
-app.get("/",async(req,res)=>{
-  res.send("app is started");
-})
+// mongoose.connect(URL).then(()=>{
+//     console.log("mongodb connected");
+// }).catch((e)=>{
+//   console.log(e.message);
+// })
+// app.get("/",async(req,res)=>{
+//   res.send("app is started");
+// })
 
-module.exports=app
+// module.exports=app
