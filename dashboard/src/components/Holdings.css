@@ -1,0 +1,87 @@
+.holdings-container {
+  max-width: 950px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.holdings-container h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.holdings-container p {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.holdings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.holdings-table th,
+.holdings-table td {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.holdings-table th {
+  background-color: #f4f4f4;
+  color: #555;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.holdings-table td {
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.holdings-table tr:hover {
+  background-color: #f9f9f9;
+  transition: 0.2s;
+}
+
+.green {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.red {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.sell-btn {
+  padding: 6px 12px;
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sell-btn:hover {
+  background-color: #e04344;
+  transition: 0.2s;
+}
+
+@media (max-width: 600px) {
+  .holdings-table th,
+  .holdings-table td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
