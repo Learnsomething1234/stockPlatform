@@ -125,7 +125,7 @@ const Holdings = () => {
                 <tr key={stock._id}>
                   <td>{stock.symbol}</td>
                   <td>{stock.qty}</td>
-                  <td>₹{stock.currentPrice}</td>
+                  <td>₹{stock.BuyPrice}</td>
                   <td className={isProfit ? "green" : "red"}>
                     ₹{stock.todayPrice}
                   </td>
