@@ -24,7 +24,7 @@ function Signup() {
       setMessage(res.data.message);
 
       if (res.data.message === "User Register Succesfull") {
-        window.location.replace("http://localhost:5174/login");
+        window.location.replace("https://stock-platform-7g8f.vercel.app//login");
       }
     } catch (err) {
       console.error(err);
@@ -68,7 +68,7 @@ function Signup() {
         {message && <p className="message">{message}</p>}
         <p className="login-text">
           Already have an account?{" "}
-          <a href="http://localhost:5174/login">Login here</a>
+          <a href="https://stock-platform-7g8f.vercel.app//login">Login here</a>
         </p>
       </div>
     </div>
