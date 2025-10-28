@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8080/login", {
+      const res = await axios.post("https://stockplatform.onrender.com/login", {
         username,
         password,
       });
@@ -87,7 +87,7 @@ const Login = () => {
 
         <Typography textAlign="center" mt={2}>
           Don't have an account?{" "}
-          <a href="http://localhost:5173/signup">Sign up here</a>
+          <a href="https://stock-platform-jet.vercel.app/signup">Sign up here</a>
         </Typography>
       </Paper>
     </Box>

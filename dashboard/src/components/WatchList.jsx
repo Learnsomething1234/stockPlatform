@@ -26,7 +26,7 @@ const WatchList = () => {
 
   const fetchWa = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/watchlist");
+      const res = await axios.get("https://stockplatform.onrender.com/watchlist");
       setWa(res.data.stocks || []);
     } catch (err) {
       console.error("Error fetching watchlist:", err);

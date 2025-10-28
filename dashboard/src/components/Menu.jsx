@@ -14,7 +14,7 @@ const Menu = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`https://stocktrading-c41p.onrender.com/user/${userId}`);
+        const response = await axios.get(`https://stockplatform.onrender.com/user/${userId}`);
         setUser1(response.data);
         setUs(response.data.name.charAt(0));
         setIsLoggedIn(true);

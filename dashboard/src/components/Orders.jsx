@@ -15,7 +15,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/order");
+      const res = await axios.get("https://stockplatform.onrender.com/order");
       setOrders(res.data.stocks || []);
     } catch (err) {
       console.error("Error fetching orders:", err);
@@ -37,7 +37,7 @@ const Orders = () => {
     if (!selectedStock) return;
     try {
       const res = await axios.post(
-        `http://localhost:8080/buy/${userId}/${selectedStock._id}`,
+        `https://stockplatform.onrender.com/buy/${userId}/${selectedStock._id}`,
         { quantity: Number(quantity) }
       );
       alert(res.data.message || `Bought ${quantity} of ${selectedStock.symbol}`);

@@ -39,7 +39,7 @@ const BuyActionWindow = ({ uid }) => {
     }
 
     try {
-      const res = await axios.post(`http://localhost:8080/buy/${userId}/${uid}`, {
+      const res = await axios.post(`https://stockplatform.onrender.com/buy/${userId}/${uid}`, {
         quantity: Number(quantity),
       });
       alert(res.data.message || `Bought ${quantity} shares`);

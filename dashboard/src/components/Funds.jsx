@@ -16,7 +16,7 @@ const Funds = () => {
 
   const fetchBalance = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/balance/${userId}`);
+      const res = await axios.get(`https://stockplatform.onrender.com/balance/${userId}`);
       const bal = typeof res.data === "number" ? res.data : res.data.newBalance ?? res.data;
       setBalance(Number(bal) || 0);
     } catch (err) {
@@ -50,7 +50,7 @@ const Funds = () => {
       return;
     }
     try {
-      const res = await axios.patch(`http://localhost:8080/withdraw/${userId}`, {
+      const res = await axios.patch(`https://stockplatform.onrender.com/withdraw/${userId}`, {
         amount: amt,
       });
       setMessage(res.data.message || "Withdraw successful");

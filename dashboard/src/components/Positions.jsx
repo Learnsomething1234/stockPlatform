@@ -11,7 +11,7 @@ const Positions = () => {
     const fetchPositions = async () => {
       try {
         const userId = localStorage.getItem("userId");
-        const res = await axios.get(`http://localhost:8080/positions/${userId}`);
+        const res = await axios.get(`https://stockplatform.onrender.com/positions/${userId}`);
 
         setStocks(res.data.stocks || []);
         setBalance(res.data.balance || 0);

@@ -32,7 +32,7 @@ const Holdings = () => {
   const fetchHoldings = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      const res = await axios.get(`http://localhost:8080/holdings/${userId}`);
+      const res = await axios.get(`https://stockplatform.onrender.com/holdings/${userId}`);
       if (res.data.message) {
         setStocks([]);
       } else {
@@ -56,7 +56,7 @@ const Holdings = () => {
     try {
       const userId = localStorage.getItem("userId");
       const res = await axios.post(
-        `http://localhost:8080/sell-holding/${userId}/${stockId}`
+        `https://stockplatform.onrender.com/sell-holding/${userId}/${stockId}`
       );
       alert(res.data.message);
       fetchHoldings();

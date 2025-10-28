@@ -22,15 +22,15 @@ const Summary = () => {
     const fetchSummary = async () => {
       try {
         
-        const userRes = await axios.get(`http://localhost:8080/user/${id}`);
+        const userRes = await axios.get(`https://stockplatform.onrender.com/user/${id}`);
         setUser(userRes.data);
 
         
-        const balanceRes = await axios.get(`http://localhost:8080/balance/${id}`);
+        const balanceRes = await axios.get(`https://stockplatform.onrender.com/balance/${id}`);
         setBalance(balanceRes.data);
 
         
-        const holdingsRes = await axios.get(`http://localhost:8080/holdings/${id}`);
+        const holdingsRes = await axios.get(`https://stockplatform.onrender.com/holdings/${id}`);
         if (holdingsRes.data?.stocks?.length) {
           const stocks = holdingsRes.data.stocks;
 
