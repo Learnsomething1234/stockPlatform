@@ -30,12 +30,13 @@ app.use("",balance);
 //     }
     
 // })
+mongoose.connect(URL).then(()=>{
+    console.log("mongodb connected");
+}).catch((e)=>{
+  console.log(e.message);
+})
 app.get("/",async(req,res)=>{
   res.send("app is started");
-  try{
-    await mongoose.connect(URL);
-    console.log("mongodb connected");
-    }catch(e){
-      console.log(e.message);
-    }
 })
+
+module.exports=app
