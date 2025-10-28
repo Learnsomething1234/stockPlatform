@@ -20,7 +20,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/signup", formData);
+      const res = await axios.post("https://stockplatform.onrender.com/signup", formData);
       setMessage(res.data.message);
 
       if (res.data.message === "User Register Succesfull") {
