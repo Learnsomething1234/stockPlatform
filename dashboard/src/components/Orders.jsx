@@ -62,7 +62,7 @@ const Orders = () => {
       <h2>Orders</h2>
 
       {!orders.length ? (
-        <p className="no-orders">No orders available</p>
+        <p className="no-orders">Orders loading</p>
       ) : (
         <div className="orders-table-wrapper">
           <table className="orders-table">

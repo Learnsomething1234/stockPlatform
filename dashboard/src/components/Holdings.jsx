@@ -32,7 +32,9 @@ const Holdings = () => {
   const fetchHoldings = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      const res = await axios.get(`https://stockplatform.onrender.com/holdings/${userId}`);
+      const res = await axios.get(
+        `https://stockplatform.onrender.com/holdings/${userId}`
+      );
       if (res.data.message) {
         setStocks([]);
       } else {
@@ -48,7 +50,7 @@ const Holdings = () => {
 
   useEffect(() => {
     fetchHoldings();
-    const interval = setInterval(fetchHoldings, 5000); 
+    const interval = setInterval(fetchHoldings, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -68,38 +70,61 @@ const Holdings = () => {
   };
 
   const handleAnalytics = (stock) => {
-    // Ensure priceHistory exists
-    if (!stock.priceHistory) {
-      stock.priceHistory = [];
-    }
+    if (!stock.priceHistory) stock.priceHistory = [];
     setSelectedStock(stock);
   };
 
   if (loading) return <p>Loading your holdings...</p>;
   if (!stocks.length) return <p>No holdings yet.</p>;
 
+  // Chart data with dynamic green/red based on price change
   const chartData = {
-    labels: selectedStock?.priceHistory?.map((p) => p.date) || [],
-    datasets: [
-      {
-        label: selectedStock?.symbol || "Stock Price",
-        data: selectedStock?.priceHistory?.map((p) => p.price) || [],
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.2)",
+  labels: selectedStock?.priceHistory?.map((p) => p.date) || [],
+  datasets: [
+    {
+      label: selectedStock?.symbol || "Stock Price",
+      data: selectedStock?.priceHistory?.map((p) => p.price) || [],
+      borderColor: "rgba(0,0,0,0)", // initial dummy, actual color per segment
+      backgroundColor: "rgba(0,0,0,0.1)",
+      tension: 0.3,
+      fill: true,
+      segment: {
+        borderColor: (ctx) => {
+          const { p0, p1 } = ctx;
+          return p1.parsed.y >= p0.parsed.y
+            ? "rgba(75, 192, 75, 1)" // green if price increased
+            : "rgba(255, 99, 132, 1)"; // red if price decreased
+        },
+        backgroundColor: (ctx) => {
+          const { p0, p1 } = ctx;
+          return p1.parsed.y >= p0.parsed.y
+            ? "rgba(75, 192, 75, 0.2)"
+            : "rgba(255, 99, 132, 0.2)";
+        },
       },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: true },
-      title: {
-        display: true,
-        text: selectedStock ? `${selectedStock.symbol} Price History` : "",
+      pointBackgroundColor: (ctx) => {
+        const { index, dataset } = ctx;
+        if (index === 0) return "rgba(75, 192, 75, 1)";
+        return dataset.data[index] >= dataset.data[index - 1]
+          ? "rgba(75, 192, 75, 1)"
+          : "rgba(255, 99, 132, 1)";
       },
     },
-  };
+  ],
+};
+
+
+  const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: { display: true },
+    title: {
+      display: true,
+      text: selectedStock ? `${selectedStock.symbol} Price History` : "",
+    },
+  },
+};
+
 
   return (
     <div className="holdings-container">
@@ -113,14 +138,14 @@ const Holdings = () => {
               <th>Symbol</th>
               <th>Quantity</th>
               <th>Buy Price</th>
-              <th>CurrentPrice</th>
+              <th>Current Price</th>
               <th>Total Value</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {stocks.map((stock) => {
-              const isProfit = stock.todayPrice >= stock.currentPrice;
+              const isProfit = stock.currentPrice >= stock.BuyPrice;
               return (
                 <tr key={stock._id}>
                   <td>{stock.symbol}</td>

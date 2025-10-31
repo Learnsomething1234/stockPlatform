@@ -57,26 +57,68 @@ const User=require("../model/UserModel");
 //   }
 // });
 
-router.patch("/withdraw/:userId",async(req,res)=>{
-  const {userId}=req.params;
-  const {amount}=req.body;
-  try{
+router.patch("/withdraw/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { amount } = req.body;
+
+  try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const balance = await Balance.findOne({ userId: user._id });
     if (!balance) return res.status(404).json({ message: "Balance record not found" });
 
-    if(balance.bal<amount) return res.json({message:`you dont have much balance and you balance is ${balance.bal}`});
-    balance.bal-=amount;
+    if (balance.bal < amount) {
+      // Record failed withdraw attempt
+      balance.withdrawHistory.push({
+        amount,
+        status: "FAILED",
+      });
+      await balance.save();
+      return res.json({
+        message: `Insufficient balance. Your balance is ${balance.bal}`,
+        withdrawHistory: balance.withdrawHistory
+      });
+    }
+
+    // Deduct balance and add to withdraw history
+    balance.bal -= amount;
+    balance.withdrawHistory.push({
+      amount,
+      status: "SUCCESS",
+    });
+
     await balance.save();
 
-    return res.json({message:"Withdraw is successfull",newBalance:balance.bal});
-  }catch(e){
+    return res.json({
+      message: "Withdraw successful",
+      newBalance: balance.bal,
+      withdrawHistory: balance.withdrawHistory
+    });
+
+  } catch (e) {
     console.error("Error during balance update:", e.message);
     res.status(500).json({ message: "Internal server error" });
   }
-})
+});
+
+router.get("/withdraw-history/:userId", async (req, res) => {
+  try {
+    const balance = await Balance.findOne({ userId: req.params.userId });
+
+    if (!balance) {
+      return res.status(404).json({ message: "User balance not found" });
+    }
+
+    res.json({
+      withdrawHistory: balance.withdrawHistory
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports=router;
   

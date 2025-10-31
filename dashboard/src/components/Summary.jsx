@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// Summary.jsx
 import "../styles/summary.css";
-
-import { ArrowUpward, ArrowDownward } from "@mui/icons-material"; 
+import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 
 const Summary = () => {
   const [user, setUser] = useState({});
@@ -21,28 +19,25 @@ const Summary = () => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        
         const userRes = await axios.get(`https://stockplatform.onrender.com/user/${id}`);
         setUser(userRes.data);
 
-        
         const balanceRes = await axios.get(`https://stockplatform.onrender.com/balance/${id}`);
         setBalance(balanceRes.data);
 
-        
         const holdingsRes = await axios.get(`https://stockplatform.onrender.com/holdings/${id}`);
         if (holdingsRes.data?.stocks?.length) {
           const stocks = holdingsRes.data.stocks;
 
-    
+          // Calculate totals
           const totalValue = stocks.reduce(
-            (sum, s) => sum + (s.todayPrice || s.currentPrice || 0) * (s.qty || 0),
+            (sum, s) => sum + (s.currentPrice || s.todayPrice || 0) * (s.qty || 0),
             0
           );
           const totalInvested = stocks.reduce((sum, s) => sum + (s.total || 0), 0);
+
           const profit = totalValue - totalInvested;
-          const percent =
-            totalInvested > 0 ? ((profit / totalInvested) * 100).toFixed(2) : 0;
+          const percent = totalInvested > 0 ? ((profit / totalInvested) * 100).toFixed(2) : 0;
 
           setHoldings({
             totalValue: totalValue.toFixed(2),
@@ -68,7 +63,8 @@ const Summary = () => {
     fetchSummary();
   }, [id]);
 
-  const isProfit = parseFloat(holdings.profit) >= 0;
+  // ✅ Corrected condition: compare totalValue and totalInvested
+  const isProfit = parseFloat(holdings.totalValue) >= parseFloat(holdings.totalInvested);
 
   return (
     <div className="summary-container">
@@ -76,6 +72,7 @@ const Summary = () => {
         <h3 className="summary-header">Hi, {user.name || "Trader"} 👋</h3>
         <hr />
 
+        {/* === Equity Section === */}
         <section className="summary-section">
           <div className="summary-title">Equity</div>
           <div className="summary-row">
@@ -93,6 +90,7 @@ const Summary = () => {
 
         <hr />
 
+        {/* === Holdings Section === */}
         <section className="summary-section">
           <div className="summary-title">
             Holdings ({holdings.count || 0})
