@@ -127,9 +127,9 @@ const Holdings = () => {
                   <td>{stock.qty}</td>
                   <td>₹{stock.BuyPrice}</td>
                   <td className={isProfit ? "green" : "red"}>
-                    ₹{stock.todayPrice}
+                    ₹{stock.currentPrice}
                   </td>
-                  <td>₹{(stock.qty * stock.todayPrice).toFixed(2)}</td>
+                  <td>₹{(stock.qty * stock.currentPrice).toFixed(2)}</td>
                   <td>
                     <button
                       className="sell-btn"

@@ -21,8 +21,8 @@ function randomType() {
 }
 
 function randomFluctuation(price) {
-  const change = price * (Math.random() * 0.04 - 0.02); // ±2%
-  return +(price + change).toFixed(2);
+  const change = price + (Math.random() * 4 - 2); // ±2%
+  return +(change).toFixed(2);
 }
 
 
