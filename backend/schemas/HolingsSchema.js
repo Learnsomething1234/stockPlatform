@@ -4,6 +4,7 @@ const StockSchema = new Schema({
   symbol: String,
   qty: Number,
   currentPrice: Number,
+  BuyPrice:Number,
   todayPrice: Number,
   lastPriceUpdate: Date,
   priceHistory: [
