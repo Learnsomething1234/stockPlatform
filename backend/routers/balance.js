@@ -62,46 +62,47 @@ router.patch("/withdraw/:userId", async (req, res) => {
   const { amount } = req.body;
 
   try {
+    if (!amount || amount <= 0)
+      return res.status(400).json({ message: "Invalid withdraw amount" });
+
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const balance = await Balance.findOne({ userId: user._id });
     if (!balance) return res.status(404).json({ message: "Balance record not found" });
 
+    let withdrawStatus = "SUCCESS";
+
     if (balance.bal < amount) {
-      // Record failed withdraw attempt
-      balance.withdrawHistory.push({
-        amount,
-        status: "FAILED",
-      });
-      await balance.save();
-      return res.json({
-        message: `Insufficient balance. Your balance is ${balance.bal}`,
-        withdrawHistory: balance.withdrawHistory
-      });
+      withdrawStatus = "FAILED";
+    } else {
+      balance.bal -= amount;
     }
 
-    // Deduct balance and add to withdraw history
-    balance.bal -= amount;
+    // Record withdraw attempt
     balance.withdrawHistory.push({
       amount,
-      status: "SUCCESS",
+      status: withdrawStatus,
+      withdrawnAt: new Date(),
     });
 
     await balance.save();
 
     return res.json({
-      message: "Withdraw successful",
+      message:
+        withdrawStatus === "SUCCESS"
+          ? "Withdraw successful"
+          : `Insufficient balance. Your balance is ${balance.bal}`,
       newBalance: balance.bal,
-      withdrawHistory: balance.withdrawHistory
+      withdrawHistory: balance.withdrawHistory,
     });
-
   } catch (e) {
-    console.error("Error during balance update:", e.message);
+    console.error("Error during withdrawal:", e.message);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
+// ✅ GET withdraw history
 router.get("/withdraw-history/:userId", async (req, res) => {
   try {
     const balance = await Balance.findOne({ userId: req.params.userId });
@@ -111,14 +112,12 @@ router.get("/withdraw-history/:userId", async (req, res) => {
     }
 
     res.json({
-      withdrawHistory: balance.withdrawHistory
+      withdrawHistory: balance.withdrawHistory,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching withdraw history:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-
-module.exports=router;
-  
+module.exports = router;
