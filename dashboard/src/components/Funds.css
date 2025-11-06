@@ -1,3 +1,4 @@
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f6f6f6;
@@ -5,48 +6,57 @@ body {
   padding: 0;
 }
 
+
 .funds-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 30px;
 }
+
 
 h2 {
   text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+  color: #222;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
 .balance-card {
   background-color: #fff;
-  padding: 25px 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  padding: 35px 40px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   position: relative;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .balance-card h3 {
-  margin-bottom: 10px;
-  color: #555;
+  margin-bottom: 15px;
+  color: #444;
+  font-size: 20px;
 }
 
 .balance-amount {
-  font-size: 28px;
+  font-size: 36px;
   font-weight: bold;
   color: #222;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .withdraw-btn {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 15px;
 }
 
 .withdraw-btn:hover {
@@ -60,7 +70,6 @@ h2 {
   font-weight: bold;
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -127,6 +136,7 @@ h2 {
 .cancel-btn:hover {
   background-color: #c82333;
 }
+
 .withdraw-history-card {
   background-color: #fff;
   margin-top: 30px;
@@ -165,4 +175,90 @@ h2 {
 .withdraw-history-table td.failed {
   color: #dc3545;
   font-weight: 600;
+}
+
+
+.transaction-history-card {
+  background-color: #fff;
+  margin-top: 40px;
+  padding: 35px 40px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.transaction-history-card h4 {
+  margin-bottom: 25px;
+  color: #222;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: left;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 6px;
+  display: inline-block;
+}
+
+.transaction-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.transaction-history-table th,
+.transaction-history-table td {
+  padding: 14px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-history-table th {
+  background-color: #f4f6f8;
+  color: #333;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.transaction-history-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.transaction-history-table tr:hover {
+  background-color: #f1f1f1;
+  transition: 0.2s;
+}
+
+
+.transaction-buy {
+  color: #dc3545; 
+  font-weight: 700;
+}
+
+.transaction-sell {
+  color: #28a745; 
+  font-weight: 700;
+}
+
+
+@media (max-width: 768px) {
+  .funds-container {
+    padding: 15px;
+  }
+
+  .balance-card,
+  .transaction-history-card {
+    padding: 20px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .transaction-history-table th,
+  .transaction-history-table td {
+    font-size: 13px;
+    padding: 10px 6px;
+  }
 }

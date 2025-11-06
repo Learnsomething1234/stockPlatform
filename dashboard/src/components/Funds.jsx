@@ -9,12 +9,12 @@ const Funds = () => {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawHistory, setWithdrawHistory] = useState([]);
-  const [transactionHistory, setTransactionHistory] = useState([]); // ✅ added state
+  const [transactionHistory, setTransactionHistory] = useState([]); 
 
   useEffect(() => {
     fetchBalance();
     fetchWithdrawHistory();
-    fetchTransactionHistory(); // ✅ added
+    fetchTransactionHistory(); 
   }, []);
 
   const fetchBalance = async () => {
@@ -38,7 +38,6 @@ const Funds = () => {
     }
   };
 
-  // ✅ New function to fetch buy/sell history
   const fetchTransactionHistory = async () => {
     try {
       const res = await axios.get(`https://stockplatform.onrender.com/withdraw-history/${userId}`);
@@ -93,7 +92,7 @@ const Funds = () => {
         </button>
       </div>
 
-      {/* ✅ Withdraw History Section */}
+     
       <div className="withdraw-history-card">
         <h4>Withdraw History</h4>
         {!withdrawHistory.length ? (
@@ -120,20 +119,19 @@ const Funds = () => {
         )}
       </div>
 
-      {/* ✅ Transaction History Section (BUY/SELL) */}
-      <div className="withdraw-history-card">
+      <div className="transaction-history-card">
         <h4>Transaction History</h4>
         {!transactionHistory.length ? (
           <p>No transaction history yet.</p>
         ) : (
-          <table className="withdraw-history-table">
+          <table className="transaction-history-table">
             <thead>
               <tr>
                 <th>Type</th>
                 <th>Category</th>
                 <th>Symbol</th>
                 <th>Qty</th>
-                <th>Price</th>
+                <th>Buy Price</th>
                 <th>Total</th>
                 <th>Date</th>
               </tr>
@@ -141,23 +139,13 @@ const Funds = () => {
             <tbody>
               {transactionHistory.map((t, idx) => (
                 <tr key={idx}>
-                  <td
-                    style={{
-                      color: t.type === "BUY" ? "red" : "green",
-                      fontWeight: "bold",
-                    }}
-                  >
+                  <td className={t.type === "BUY" ? "transaction-buy" : "transaction-sell"}>
                     {t.type === "BUY" ? "− Buy" : "+ Sell"}
                   </td>
                   <td>{t.category}</td>
                   <td>{t.symbol}</td>
                   <td>{t.qty}</td>
-                  <td>
-                    ₹{" "}
-                    {t.type === "BUY"
-                      ? t.buyPrice?.toFixed(2)
-                      : t.sellPrice?.toFixed(2)}
-                  </td>
+                  <td>₹ {t.buyPrice?.toFixed(2)}</td>
                   <td>₹ {t.total?.toFixed(2)}</td>
                   <td>{new Date(t.createdAt).toLocaleString()}</td>
                 </tr>
