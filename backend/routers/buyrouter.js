@@ -15,9 +15,8 @@ router.post("/buy/:userId/:id", async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) return res.json({ message: "User not found" });
-    const balance=await Balance.findOne({userId:userId});
+    const balance = await Balance.findOne({ userId: userId });
 
-    
     let stockData = null;
     let source = "";
 
@@ -40,18 +39,25 @@ router.post("/buy/:userId/:id", async (req, res) => {
     const { symbol, currentPrice, type1 } = stockData;
     const totalCost = currentPrice * quantity;
 
-    
     if (balance.bal < totalCost) {
       return res.json({
         message: `Balance is not enough to buy. Available: ${balance.bal}`,
       });
     }
 
-
     balance.bal -= totalCost;
     await balance.save();
 
-    
+    balance.transactionHistory.push({
+      type: "BUY",
+      category: type1 === "NORMAL" ? "HOLDING" : "POSITION",
+      symbol,
+      qty: quantity,
+      buyPrice: currentPrice,
+      total: totalCost
+    });
+    await balance.save();
+
     if (type1 === "NORMAL") {
       const holdings = await Holdings.findOne({ userId });
       if (!holdings) {
@@ -61,13 +67,13 @@ router.post("/buy/:userId/:id", async (req, res) => {
       holdings.stocks.push({
         symbol,
         currentPrice,
-        BuyPrice:currentPrice,
-        qty:quantity,
+        BuyPrice: currentPrice,
+        qty: quantity,
         total: totalCost,
       });
 
       await holdings.save();
-     
+
     } else {
       const positions = await Positions.findOne({ userId });
       if (!positions) {
@@ -77,21 +83,21 @@ router.post("/buy/:userId/:id", async (req, res) => {
       positions.stocks.push({
         symbol,
         currentPrice,
-        qty:quantity,
+        qty: quantity,
         total: totalCost,
       });
 
       await positions.save();
-      
     }
 
     return res.json({
       message: `You successfully bought ${quantity} of ${symbol} from ${source}`,
-      remainingBalance: user.Balance.bal,
+      remainingBalance: balance.bal,
     });
   } catch (e) {
     console.error("Error during buy operation:", e.message);
     return res.status(500).json({ message: "Server error", error: e.message });
   }
 });
+
 module.exports=router;

@@ -244,22 +244,31 @@ router.get("/positions/:userId", async (req, res) => {
       return res.json({ message: "No positions yet", stocks: [] });
     }
 
-    const today = new Date().toISOString().split("T")[0]; 
+    const today = new Date().toISOString().split("T")[0];
     let totalAdded = 0;
 
     if (!positions.lastSoldDate || positions.lastSoldDate < today) {
-     
       positions.stocks.forEach((stock) => {
         const fluctuation = stock.currentPrice * (Math.random() * 0.10 - 0.05);
         const sellPrice = +(stock.currentPrice + fluctuation).toFixed(2);
-        totalAdded += sellPrice * stock.qty;
+        const totalSell = sellPrice * stock.qty;
+        totalAdded += totalSell;
+
+        // ===================== ADD HISTORY (SELL - POSITION) ===================== //
+        balance.transactionHistory.push({
+          type: "SELL",
+          category: "POSITION",
+          symbol: stock.symbol,
+          qty: stock.qty,
+          buyPrice: stock.currentPrice,
+          sellPrice,
+          total: totalSell
+        });
       });
 
- 
       positions.stocks = [];
       positions.lastSoldDate = today;
       await positions.save();
-
 
       balance.bal += totalAdded;
       await balance.save();
@@ -271,6 +280,8 @@ router.get("/positions/:userId", async (req, res) => {
     return res.status(500).json({ message: "Server error", error: e.message });
   }
 });
+
+
 
 router.get("/stock-history/:id", async (req, res) => {
   try {
@@ -305,14 +316,29 @@ router.post("/sell-holding/:userId/:stockId", async (req, res) => {
 
     const stock = holdings.stocks.id(stockId);
     if (!stock) return res.json({ message: "Stock not found" });
+
     const totalSell = stock.todayPrice * stock.qty;
     balance.bal += totalSell;
+    await balance.save();
+
+    balance.transactionHistory.push({
+      type: "SELL",
+      category: "HOLDING",
+      symbol: stock.symbol,
+      qty: stock.qty,
+      buyPrice: stock.BuyPrice,
+      sellPrice: stock.todayPrice,
+      total: totalSell
+    });
     await balance.save();
 
     holdings.stocks.remove(stockId);
     await holdings.save();
 
-    return res.json({ message: `Sold ${stock.symbol} for ₹${totalSell.toFixed(2)}`, balance: balance.bal });
+    return res.json({
+      message: `Sold ${stock.symbol} for ₹${totalSell.toFixed(2)}`,
+      balance: balance.bal
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Server error", error: err.message });
