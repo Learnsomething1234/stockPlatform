@@ -102,7 +102,7 @@ router.patch("/withdraw/:userId", async (req, res) => {
   }
 });
 
-// ✅ GET withdraw history
+
 router.get("/withdraw-history/:userId", async (req, res) => {
   try {
     const balance = await Balance.findOne({ userId: req.params.userId });
