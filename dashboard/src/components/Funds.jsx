@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Funds.css";
 
@@ -8,12 +8,12 @@ const Funds = () => {
   const [message, setMessage] = useState("");
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
-const [withdrawHistory, setWithdrawHistory] = useState([]);
+  const [withdrawHistory, setWithdrawHistory] = useState([]);
 
   useEffect(() => {
     fetchBalance();
+    fetchWithdrawHistory();
   }, []);
-
 
   const fetchBalance = async () => {
     try {
@@ -23,6 +23,16 @@ const [withdrawHistory, setWithdrawHistory] = useState([]);
     } catch (err) {
       console.error("fetch balance error", err);
       setMessage("Unable to fetch balance");
+    }
+  };
+
+  const fetchWithdrawHistory = async () => {
+    try {
+      const res = await axios.get(`https://stockplatform.onrender.com/withdraw-history/${userId}`);
+      setWithdrawHistory(res.data.withdrawHistory || []);
+    } catch (err) {
+      console.error("fetch withdraw history error", err);
+      setWithdrawHistory([]);
     }
   };
 
@@ -50,6 +60,7 @@ const [withdrawHistory, setWithdrawHistory] = useState([]);
       setMessage(res.data.message || `₹${amt} withdrawn successfully`);
       setShowWithdrawModal(false);
       fetchBalance();
+      fetchWithdrawHistory(); // refresh history after withdraw
     } catch (err) {
       console.error("withdraw error", err);
       setMessage(err.response?.data?.message || "Error withdrawing");
@@ -68,32 +79,32 @@ const [withdrawHistory, setWithdrawHistory] = useState([]);
         </button>
       </div>
 
-      {/* <div className="withdraw-history-card">
-  <h4>Withdraw History</h4>
-  {!withdrawHistory.length ? (
-    <p>No withdrawals yet.</p>
-  ) : (
-    <table className="withdraw-history-table">
-      <thead>
-        <tr>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {withdrawHistory.map((w, idx) => (
-          <tr key={idx}>
-            <td>₹ {w.amount}</td>
-            <td>{w.status}</td>
-            <td>{new Date(w.withdrawnAt).toLocaleString()}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div> */}
-
+      {/* ✅ Withdraw History Section */}
+      <div className="withdraw-history-card">
+        <h4>Withdraw History</h4>
+        {!withdrawHistory.length ? (
+          <p>No withdraw history yet.</p>
+        ) : (
+          <table className="withdraw-history-table">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {withdrawHistory.map((w, idx) => (
+                <tr key={idx}>
+                  <td>₹ {w.amount}</td>
+                  <td>{w.status}</td>
+                  <td>{new Date(w.withdrawnAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
       {message && <p className="message">{message}</p>}
 
