@@ -113,7 +113,7 @@ router.get("/withdraw-history/:userId", async (req, res) => {
 
     res.json({
       withdrawHistory: balance.withdrawHistory,
-      transactionHistory: balance.transactionHistory
+       transactionHistory: balance.transactionHistory
     });
   } catch (err) {
     console.error("Error fetching withdraw history:", err.message);
