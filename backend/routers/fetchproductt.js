@@ -254,7 +254,6 @@ router.get("/positions/:userId", async (req, res) => {
         const totalSell = sellPrice * stock.qty;
         totalAdded += totalSell;
 
-        // ===================== ADD HISTORY (SELL - POSITION) ===================== //
         balance.transactionHistory.push({
           type: "SELL",
           category: "POSITION",

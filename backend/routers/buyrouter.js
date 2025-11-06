@@ -48,15 +48,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
     balance.bal -= totalCost;
     await balance.save();
 
-    balance.transactionHistory.push({
-      type: "BUY",
-      category: type1 === "NORMAL" ? "HOLDING" : "POSITION",
-      symbol,
-      qty: quantity,
-      buyPrice: currentPrice,
-      total: totalCost
-    });
-    await balance.save();
+    
 
     if (type1 === "NORMAL") {
       const holdings = await Holdings.findOne({ userId });
@@ -73,6 +65,16 @@ router.post("/buy/:userId/:id", async (req, res) => {
       });
 
       await holdings.save();
+       balance.transactionHistory.push({
+      type: "BUY",
+      category:  "HOLDING",
+      symbol,
+      qty: quantity,
+      buyPrice: currentPrice,
+      total: totalCost
+    });
+    await balance.save();
+
 
     } else {
       const positions = await Positions.findOne({ userId });
@@ -88,8 +90,18 @@ router.post("/buy/:userId/:id", async (req, res) => {
       });
 
       await positions.save();
-    }
+       balance.transactionHistory.push({
+      type: "BUY",
+      category: "POSITION",
+      symbol,
+      qty: quantity,
+      buyPrice: currentPrice,
+      total: totalCost
+    });
+    await balance.save();
 
+    }
+   
     return res.json({
       message: `You successfully bought ${quantity} of ${symbol} from ${source}`,
       remainingBalance: balance.bal,

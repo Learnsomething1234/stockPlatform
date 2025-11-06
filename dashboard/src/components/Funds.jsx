@@ -9,10 +9,12 @@ const Funds = () => {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawHistory, setWithdrawHistory] = useState([]);
+  const [transactionHistory, setTransactionHistory] = useState([]); // ✅ added state
 
   useEffect(() => {
     fetchBalance();
     fetchWithdrawHistory();
+    fetchTransactionHistory(); // ✅ added
   }, []);
 
   const fetchBalance = async () => {
@@ -33,6 +35,18 @@ const Funds = () => {
     } catch (err) {
       console.error("fetch withdraw history error", err);
       setWithdrawHistory([]);
+    }
+  };
+
+  // ✅ New function to fetch buy/sell history
+  const fetchTransactionHistory = async () => {
+    try {
+      const res = await axios.get(`https://stockplatform.onrender.com/withdraw-history/${userId}`);
+      console.log("transaction history response", res.data);
+      setTransactionHistory(res.data.transactionHistory || []);
+    } catch (err) {
+      console.error("fetch transaction history error", err);
+      setTransactionHistory([]);
     }
   };
 
@@ -60,7 +74,7 @@ const Funds = () => {
       setMessage(res.data.message || `₹${amt} withdrawn successfully`);
       setShowWithdrawModal(false);
       fetchBalance();
-      fetchWithdrawHistory(); // refresh history after withdraw
+      fetchWithdrawHistory();
     } catch (err) {
       console.error("withdraw error", err);
       setMessage(err.response?.data?.message || "Error withdrawing");
@@ -99,6 +113,53 @@ const Funds = () => {
                   <td>₹ {w.amount}</td>
                   <td>{w.status}</td>
                   <td>{new Date(w.withdrawnAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* ✅ Transaction History Section (BUY/SELL) */}
+      <div className="withdraw-history-card">
+        <h4>Transaction History</h4>
+        {!transactionHistory.length ? (
+          <p>No transaction history yet.</p>
+        ) : (
+          <table className="withdraw-history-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Symbol</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactionHistory.map((t, idx) => (
+                <tr key={idx}>
+                  <td
+                    style={{
+                      color: t.type === "BUY" ? "red" : "green",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {t.type === "BUY" ? "− Buy" : "+ Sell"}
+                  </td>
+                  <td>{t.category}</td>
+                  <td>{t.symbol}</td>
+                  <td>{t.qty}</td>
+                  <td>
+                    ₹{" "}
+                    {t.type === "BUY"
+                      ? t.buyPrice?.toFixed(2)
+                      : t.sellPrice?.toFixed(2)}
+                  </td>
+                  <td>₹ {t.total?.toFixed(2)}</td>
+                  <td>{new Date(t.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
