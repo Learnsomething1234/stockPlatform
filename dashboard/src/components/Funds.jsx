@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Funds.css";
-
+import { message } from "antd";
 
 const Funds = () => {
   const userId = localStorage.getItem("userId");
   const [balance, setBalance] = useState(0);
-  const [message, setMessage] = useState("");
+  const [message1, setMessage] = useState("");
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawHistory, setWithdrawHistory] = useState([]);
@@ -61,23 +61,28 @@ const Funds = () => {
     const amt = Number(withdrawAmount);
     if (!amt || amt <= 0) {
       setMessage("Enter a valid withdrawal amount");
-      return;
+      message.warning("Enter a valid withdrawal amount");
+      closeWithdraw();
     }
     if (amt > balance) {
       setMessage("Insufficient balance");
-      return;
+      message.warning("Insufficient balance");
+      closeWithdraw();
     }
     try {
       const res = await axios.patch(`https://stockplatform.onrender.com/withdraw/${userId}`, {
         amount: amt,
       });
       setMessage(res.data.message || `₹${amt} withdrawn successfully`);
+      message.success(res.data.message || `₹${amt} withdrawn successfully`)
       setShowWithdrawModal(false);
       fetchBalance();
       fetchWithdrawHistory();
     } catch (err) {
       console.error("withdraw error", err);
       setMessage(err.response?.data?.message || "Error withdrawing");
+      message.error(err.response?.data?.message || "Error withdrawing");
+      closeWithdraw();
     }
   };
 
@@ -156,7 +161,7 @@ const Funds = () => {
         )}
       </div>
 
-      {message && <p className="message">{message}</p>}
+      {message1 && <p className="message">{message1}</p>}
 
       {showWithdrawModal && (
         <div className="modal-overlay" onClick={closeWithdraw}>
