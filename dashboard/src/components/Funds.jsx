@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Funds.css";
-import { message1 } from "antd";
+
 
 const Funds = () => {
   const userId = localStorage.getItem("userId");
@@ -60,11 +60,11 @@ const Funds = () => {
   const handleWithdraw = async () => {
     const amt = Number(withdrawAmount);
     if (!amt || amt <= 0) {
-      message1.warning("Enter a valid withdrawal amount");
+      setMessage("Enter a valid withdrawal amount");
       return;
     }
     if (amt > balance) {
-      message1.warning("Insufficient balance");
+      setMessage("Insufficient balance");
       return;
     }
     try {
@@ -72,13 +72,11 @@ const Funds = () => {
         amount: amt,
       });
       setMessage(res.data.message || `₹${amt} withdrawn successfully`);
-      message1.success(res.data.message || `₹${amt} withdrawn successfully`)
       setShowWithdrawModal(false);
       fetchBalance();
       fetchWithdrawHistory();
     } catch (err) {
       console.error("withdraw error", err);
-      message1.error(err.response?.data?.message || "Error withdrawing")
       setMessage(err.response?.data?.message || "Error withdrawing");
     }
   };
