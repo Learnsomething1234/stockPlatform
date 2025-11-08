@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import axios from "axios";
+import { message } from "antd"; 
 import "./Holdings.css";
 
 ChartJS.register(
@@ -60,12 +61,12 @@ const Holdings = () => {
       const res = await axios.post(
         `https://stockplatform.onrender.com/sell-holding/${userId}/${stockId}`
       );
-      alert(res.data.message);
+      message.success(res.data.message);
       fetchHoldings();
       setSelectedStock(null);
     } catch (err) {
       console.error("Error selling stock:", err);
-      alert("Sell failed");
+      message.error("Sell failed"); 
     }
   };
 
@@ -79,52 +80,50 @@ const Holdings = () => {
 
   // Chart data with dynamic green/red based on price change
   const chartData = {
-  labels: selectedStock?.priceHistory?.map((p) => p.date) || [],
-  datasets: [
-    {
-      label: selectedStock?.symbol || "Stock Price",
-      data: selectedStock?.priceHistory?.map((p) => p.price) || [],
-      borderColor: "rgba(0,0,0,0)", // initial dummy, actual color per segment
-      backgroundColor: "rgba(0,0,0,0.1)",
-      tension: 0.3,
-      fill: true,
-      segment: {
-        borderColor: (ctx) => {
-          const { p0, p1 } = ctx;
-          return p1.parsed.y >= p0.parsed.y
-            ? "rgba(75, 192, 75, 1)" // green if price increased
-            : "rgba(255, 99, 132, 1)"; // red if price decreased
+    labels: selectedStock?.priceHistory?.map((p) => p.date) || [],
+    datasets: [
+      {
+        label: selectedStock?.symbol || "Stock Price",
+        data: selectedStock?.priceHistory?.map((p) => p.price) || [],
+        borderColor: "rgba(0,0,0,0)", 
+        backgroundColor: "rgba(0,0,0,0.1)",
+        tension: 0.3,
+        fill: true,
+        segment: {
+          borderColor: (ctx) => {
+            const { p0, p1 } = ctx;
+            return p1.parsed.y >= p0.parsed.y
+              ? "rgba(75, 192, 75, 1)" 
+              : "rgba(255, 99, 132, 1)"; 
+          },
+          backgroundColor: (ctx) => {
+            const { p0, p1 } = ctx;
+            return p1.parsed.y >= p0.parsed.y
+              ? "rgba(75, 192, 75, 0.2)"
+              : "rgba(255, 99, 132, 0.2)";
+          },
         },
-        backgroundColor: (ctx) => {
-          const { p0, p1 } = ctx;
-          return p1.parsed.y >= p0.parsed.y
-            ? "rgba(75, 192, 75, 0.2)"
-            : "rgba(255, 99, 132, 0.2)";
+        pointBackgroundColor: (ctx) => {
+          const { index, dataset } = ctx;
+          if (index === 0) return "rgba(75, 192, 75, 1)";
+          return dataset.data[index] >= dataset.data[index - 1]
+            ? "rgba(75, 192, 75, 1)"
+            : "rgba(255, 99, 132, 1)";
         },
       },
-      pointBackgroundColor: (ctx) => {
-        const { index, dataset } = ctx;
-        if (index === 0) return "rgba(75, 192, 75, 1)";
-        return dataset.data[index] >= dataset.data[index - 1]
-          ? "rgba(75, 192, 75, 1)"
-          : "rgba(255, 99, 132, 1)";
-      },
-    },
-  ],
-};
-
+    ],
+  };
 
   const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: { display: true },
-    title: {
-      display: true,
-      text: selectedStock ? `${selectedStock.symbol} Price History` : "",
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+      title: {
+        display: true,
+        text: selectedStock ? `${selectedStock.symbol} Price History` : "",
+      },
     },
-  },
-};
-
+  };
 
   return (
     <div className="holdings-container">

@@ -33,7 +33,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
     }
 
     if (!stockData) {
-      return res.json({ message: "Stock not found in order or watchlist" });
+      return res.json({ warning: "Stock not found in order or watchlist" });
     }
 
     const { symbol, currentPrice, type1 } = stockData;
@@ -53,7 +53,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
     if (type1 === "NORMAL") {
       const holdings = await Holdings.findOne({ userId });
       if (!holdings) {
-        return res.json({ message: "Holdings not found for user" });
+        return res.json({ warning: "Holdings not found for user" });
       }
 
       holdings.stocks.push({
@@ -79,7 +79,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
     } else {
       const positions = await Positions.findOne({ userId });
       if (!positions) {
-        return res.json({ message: "Positions not found for user" });
+        return res.json({ warning: "Positions not found for user" });
       }
 
       positions.stocks.push({

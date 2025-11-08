@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd"; 
 import "./Login.css";
 
 const Login = () => {
@@ -24,16 +25,16 @@ const Login = () => {
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userId", res.data.userId);
-        alert("Login successful!");
+        message.success("Login successful!"); 
         navigate("/");
       } else {
-        alert(res.data.error || "Login failed");
+        message.error(res.data.error || "Login failed"); 
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        alert("Invalid username or password");
+        message.warning("Invalid username or password"); 
       } else {
-        alert("Server error. Try again later.");
+        message.error("Server error. Try again later."); 
       }
       console.error(err);
     } finally {

@@ -2,6 +2,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { message } from "antd"; 
 import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
@@ -33,7 +34,7 @@ const BuyActionWindow = ({ uid }) => {
 
   const handleBuyClick = async () => {
     if (!token || !userId) {
-      alert("Login First");
+      message.warning("Login First");
       window.location.href = "/login";
       return;
     }
@@ -42,10 +43,15 @@ const BuyActionWindow = ({ uid }) => {
       const res = await axios.post(`https://stockplatform.onrender.com/buy/${userId}/${uid}`, {
         quantity: Number(quantity),
       });
-      alert(res.data.message || `Bought ${quantity} shares`);
+      if(res.data.success){
+      message.success(res.data.success || `Bought ${quantity} shares`);
+      }else{
+        console.log(res.data.warning)
+        message.warning(res.data.warning)
+      }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      message.error("Something went wrong.");
     }
 
     closeBuyWindow();
@@ -71,7 +77,7 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>buy your product</span>
         <div>
           <Link className="btn btn-blue" onClick={handleBuyClick}>
             Buy

@@ -65,9 +65,9 @@ function Signup() {
           />
           <button type="submit">Sign Up</button>
         </form>
-        {message && <p className="message">{message}</p>}
+        {message && <p className="message"> <h6 style={{color:"red"}}>{message}</h6></p>}
         <p className="login-text">
-          Already have an account?{" "}
+         Already have an account?{" "}
           <a href="https://stock-platform-7g8f.vercel.app//login">Login here</a>
         </p>
       </div>

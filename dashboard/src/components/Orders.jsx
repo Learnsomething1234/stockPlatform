@@ -4,6 +4,7 @@ import { Tooltip, Grow } from "@mui/material";
 import { BarChartOutlined } from "@mui/icons-material";
 import StockAnalyticsModal from "./StockAnalyticsModal";
 import "./order.css";
+import { message } from "antd";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -40,7 +41,12 @@ const Orders = () => {
         `https://stockplatform.onrender.com/buy/${userId}/${selectedStock._id}`,
         { quantity: Number(quantity) }
       );
-      alert(res.data.message || `Bought ${quantity} of ${selectedStock.symbol}`);
+      if(res.data.success){
+            message.success(res.data.success || `Bought ${quantity} shares`);
+            }else{
+              console.log(res.data.warning)
+              message.warning(res.data.warning)
+            }
     } catch (err) {
       console.error(err);
       alert("Buy failed");

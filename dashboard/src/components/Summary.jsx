@@ -63,7 +63,7 @@ const Summary = () => {
     fetchSummary();
   }, [id]);
 
-  // ✅ Corrected condition: compare totalValue and totalInvested
+ 
   const isProfit = parseFloat(holdings.totalValue) >= parseFloat(holdings.totalInvested);
 
   return (

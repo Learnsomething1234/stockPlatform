@@ -36,8 +36,8 @@ const WatchList = () => {
   };
 
   useEffect(() => {
-    fetchWa(); // Initial fetch
-    const interval = setInterval(fetchWa, 300000); // 5 minutes
+    fetchWa(); 
+    const interval = setInterval(fetchWa, 300000); 
     return () => clearInterval(interval);
   }, []);
 
