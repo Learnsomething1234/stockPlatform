@@ -41,7 +41,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
 
     if (balance.bal < totalCost) {
       return res.json({
-        message: `Balance is not enough to buy. Available: ${balance.bal}`,
+        warning: `Balance is not enough to buy. Available: ${balance.bal}`,
       });
     }
 
@@ -103,7 +103,7 @@ router.post("/buy/:userId/:id", async (req, res) => {
     }
    
     return res.json({
-      message: `You successfully bought ${quantity} of ${symbol} from ${source}`,
+      success: `You successfully bought ${quantity} of ${symbol} from ${source}`,
       remainingBalance: balance.bal,
     });
   } catch (e) {
