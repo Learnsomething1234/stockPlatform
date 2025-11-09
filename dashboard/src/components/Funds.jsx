@@ -63,11 +63,13 @@ const Funds = () => {
       setMessage("Enter a valid withdrawal amount");
       message.warning("Enter a valid withdrawal amount");
       closeWithdraw();
+      return;
     }
     if (amt > balance) {
       setMessage("Insufficient balance");
       message.warning("Insufficient balance");
       closeWithdraw();
+      return;
     }
     try {
       const res = await axios.patch(`https://stockplatform.onrender.com/withdraw/${userId}`, {
