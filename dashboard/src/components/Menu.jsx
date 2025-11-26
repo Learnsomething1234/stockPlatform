@@ -76,7 +76,7 @@ const Menu = () => {
           style={{ position: "relative", cursor: "pointer" }}
         >
           <div className="avatar">{us}</div>
-          <p className="username">KnownMore</p>
+          {/* <p className="username">KnownMore</p> */}
 
           {isProfileDropdownOpen && (
             <div
